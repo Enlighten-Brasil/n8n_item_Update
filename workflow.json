@@ -27,7 +27,7 @@
     },
     {
       "parameters": {
-        "filePath": "=./data/{{ $workflow.name }}/config.json"
+        "filePath": "./data/n8n_item_Update-main/config.json"
       },
       "id": "5f4f3b1d-0376-4f7e-abc0-9d88869691cb",
       "name": "Carregar Config",
@@ -40,7 +40,7 @@
     },
     {
       "parameters": {
-        "filePath": "=./data/{{ $workflow.name }}/input/{{ $('Config').item.json.inputFilePath }}",
+        "filePath": "=./data/n8n_item_Update-main/input/{{ $('Config').item.json.inputFilePath }}",
         "dataPropertyName": "=data"
       },
       "id": "f266299b-659f-4268-a6a3-d23791c9938f",
@@ -88,7 +88,7 @@
     },
     {
       "parameters": {
-        "fileName": "=./data/{{ $workflow.name }}/output/{{ $now.toUnixInteger() }}_{{ $workflow.name }}.xlsx",
+        "fileName": "=./data/n8n_item_Update-main/output/{{ $now.toUnixInteger() }}.xlsx",
         "options": {
           "append": true
         }
@@ -568,7 +568,7 @@
     "saveManualExecutions": true,
     "callerPolicy": "workflowsFromSameOwner"
   },
-  "versionId": "013d1c25-5df9-4f82-9400-e0bc43d40b8b",
+  "versionId": "9b24722f-9716-43c2-86c5-7f1a0c601cda",
   "id": "3",
   "meta": {
     "instanceId": "33c55fb288fb53971b39759207f90c8f479a8a5b1eff9cfacde5bcf4a60f1101"
