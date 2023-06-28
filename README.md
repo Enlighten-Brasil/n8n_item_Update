@@ -24,6 +24,20 @@
 - `user_token`: Token do usuário que irá se autenticar na API EnSpace.
 - `inputDateFormat`: Formato da data usado no arquivo `.xlsx`. (Ex: `dd/MM/yyyy`, `MM/dd/yyyy`, `yyyy-MM-dd`)
 
+#### Instruções para Formato de Data
+- `dd`: Dia com 2 dígitos
+- `MM`: Mês com 2 dígitos
+- `yyyy`: Ano com 4 dígitos
+- `HH`: Hora com 2 dígitos
+- `mm`: Minuto com 2 dígitos
+- `ss`: Segundo com 2 dígitos
+
+##### Exemplos de Formato de Data / Hora
+- `dd/MM/yyyy`: 30/01/2021
+- `MM/dd/yyyy`: 01/30/2021
+- `yyyy-MM-dd`: 2021-01-30
+- `dd/MM/yyyy HH:mm:ss`: 30/01/2021 00:00:00
+
 ### Tipos de campos suportados e formato de entrada
 - Texto, Texto longo
   - Tipo: `string` ou `texto`
