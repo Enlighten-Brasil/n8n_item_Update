@@ -1,5 +1,5 @@
 {
-  "name": "item_Update",
+  "name": "n8n-item_Update",
   "nodes": [
     {
       "parameters": {},
@@ -568,7 +568,7 @@
     "saveManualExecutions": true,
     "callerPolicy": "workflowsFromSameOwner"
   },
-  "versionId": "3f6c62a5-387b-4447-8fe4-3fc933ee4388",
+  "versionId": "013d1c25-5df9-4f82-9400-e0bc43d40b8b",
   "id": "3",
   "meta": {
     "instanceId": "33c55fb288fb53971b39759207f90c8f479a8a5b1eff9cfacde5bcf4a60f1101"
