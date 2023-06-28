@@ -1,8 +1,8 @@
 {
-  "apiUrl": "",
-  "inputFilePath": "",
-  "type_id": "",
-  "user_email": "",
-  "user_token": "",
+  "apiUrl": "https://api.stage.enspace.io",
+  "inputFilePath": "input.xlsx",
+  "type_id": 1,
+  "user_email": "exemplo@exemplo.com",
+  "user_token": "exemplo",
   "inputDateFormat": "dd/MM/yyyy"
 }
