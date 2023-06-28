@@ -1,0 +1,577 @@
+{
+  "name": "item_Update",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "f7d2e00f-a863-44a2-8368-2066da97ea7e",
+      "name": "Executar Fluxo",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        -320
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field\n// called 'myNewField' to the JSON of each one\nlet results = [],\ni = 0;\n\ndo {\n  try {\n    results = results.concat($(\"NoOp\").all(0, i));\n  } catch (error) {\n    results?.map((r) => {\n      delete r.json.id;\n      delete r.json.group;\n      delete r.json.form;\n      delete r.json.user;\n      delete r.json.module;\n      delete r.json.fixed;\n      delete r.json.c_mailbox_message;\n      delete r.json.data_privacy;\n      delete r.json.document;\n      delete r.json.document_generated;\n      delete r.json.question;\n      delete r.json.form_result;\n      delete r.json.type;\n      return r\n    })\n    return results;\n  }\n  i++;\n} while (true);\n\n\n"
+      },
+      "id": "5c35e83c-7561-47d4-a9cf-c15310f397b9",
+      "name": "Tratamento da Resposta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        880,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "filePath": "=./data/{{ $workflow.name }}/config.json"
+      },
+      "id": "5f4f3b1d-0376-4f7e-abc0-9d88869691cb",
+      "name": "Carregar Config",
+      "type": "n8n-nodes-base.readBinaryFile",
+      "typeVersion": 1,
+      "position": [
+        -60,
+        -320
+      ]
+    },
+    {
+      "parameters": {
+        "filePath": "=./data/{{ $workflow.name }}/input/{{ $('Config').item.json.inputFilePath }}",
+        "dataPropertyName": "=data"
+      },
+      "id": "f266299b-659f-4268-a6a3-d23791c9938f",
+      "name": "Carregar Input",
+      "type": "n8n-nodes-base.readBinaryFile",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        -100
+      ],
+      "alwaysOutputData": false,
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "unit": "seconds"
+      },
+      "id": "171d4851-f835-4003-b64c-c46d296077ad",
+      "name": "Wait",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        -100,
+        140
+      ],
+      "webhookId": "9e0947c6-cbc4-4ae4-921b-6c901ec03637"
+    },
+    {
+      "parameters": {
+        "operation": "toFile",
+        "options": {
+          "fileName": "Items_Cadastrados.xlsx",
+          "headerRow": true,
+          "sheetName": "={{ $workflow.name }}"
+        }
+      },
+      "id": "2be295fd-be74-4cd2-914b-6de7b8cecbf6",
+      "name": "Planilha de Saida",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 1,
+      "position": [
+        1080,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "fileName": "=./data/{{ $workflow.name }}/output/{{ $now.toUnixInteger() }}_{{ $workflow.name }}.xlsx",
+        "options": {
+          "append": true
+        }
+      },
+      "id": "0d9f5c98-4e53-455e-b922-a1e46296e351",
+      "name": "Salva Saida",
+      "type": "n8n-nodes-base.writeBinaryFile",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "batchSize": "1",
+        "options": {
+          "reset": false
+        }
+      },
+      "id": "7a4ebdc8-7e48-47d0-b1f6-d77bd9c8a952",
+      "name": "Split In Batches",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $('Split In Batches').context.noItemsLeft }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "7cfb885b-bae9-40b3-bd4e-dde023466013",
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        600,
+        140
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "5cea86b2-5f2c-4d4b-9df0-f8bca7a3cca4",
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        380,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const workData = $getWorkflowStaticData('global');\n\n  for (const item of $input.all()) {\n    // CHECK DATE FIELD CONVERT\n    if (workData?.rules?.dateFields?.length) {\n      for (const dField of workData?.rules?.dateFields) {\n         if (item.json[dField]) {\n            const inputFormat = $('Config').first().json.inputDateFormat\n            item.json[dField] = DateTime.fromFormat(item.json[dField], inputFormat).toISO({includeOffset: false})\n         }\n      }\n    }\n    // ADJUST DATA FIELD\n    const newObj = {}\n    for (const key in item.json) {\n      if (key.startsWith('data.')) {\n        const newKey = key.replace('data.', '')\n        newObj.data = {\n          ...newObj.data,\n          [newKey]: item.json[key]\n        }\n      } else {\n        newObj[key] = item.json[key]\n      }\n    }\n\n    item.json = newObj\n  }\n \n\n\nreturn $input.all().filter(i => i)"
+      },
+      "id": "d36c2a26-8745-476b-8471-cc4266dae9b4",
+      "name": "Tratamento Entrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        600,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "headerRow": true
+        }
+      },
+      "id": "96d56135-2426-42c0-87fd-471f5261c85f",
+      "name": "Ler Como Planilha",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\nreturn $input.all().filter((i) => i.json['reference']);"
+      },
+      "id": "abfd7e96-4540-48e9-8650-0856818ddc61",
+      "name": "Remove Vazios",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        140,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "removeDuplicates",
+        "compare": "selectedFields",
+        "fieldsToCompare": {
+          "fields": [
+            {
+              "fieldName": "reference"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "bff108a0-6fab-4f45-a0ff-647fb81d9df0",
+      "name": "Remove Duplicados",
+      "type": "n8n-nodes-base.itemLists",
+      "typeVersion": 1,
+      "position": [
+        380,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Config').item.json.apiUrl }}/auth-external",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "=email",
+              "value": "={{ $('Config').item.json.user_email }}"
+            },
+            {
+              "name": "token",
+              "value": "={{ $('Config').item.json.user_token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a7ea33e7-1002-4d8b-9b24-240ba4ae417a",
+      "name": "Auth",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [
+        440,
+        -320
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Config').item.json.apiUrl }}/c-fields",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "item_type",
+              "value": "={{ $('Config').item.json.type_id }}"
+            },
+            {
+              "name": "_limit",
+              "value": "-1"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "enl-token",
+              "value": "enspace4c4c"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "6d5a1898-703d-468d-9ff3-cd76b8078be9",
+      "name": "Campos",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [
+        700,
+        -320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "2",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const dateTypes = ['EnlCalendar', 'date', 'time', 'datetime-local']\nconst dateFields = []\nconst requiredFields = []\nconst workflowStaticData = $getWorkflowStaticData('global')\n\nfor (const item of $input.all()) {\n\n  if (dateTypes.includes(item.json.type))\n      dateFields.push('data.' +  item.json.refId)\n\n  if (item.json?.validation?.includes('required'))\n      requiredFields.push('data.' + item.json.refId)\n}\n\nworkflowStaticData.rules = {\n  dateFields,\n  requiredFields\n}\n\nreturn $input.all();\n"
+      },
+      "id": "717294e9-151d-40de-98ed-0ee9ddbcc53a",
+      "name": "Regras",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        920,
+        -320
+      ]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "={{ $('Config').item.json.apiUrl }}/c-items/{{ $json.reference }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "enl-token",
+              "value": "enspace4c4c"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "data",
+              "value": "={{ $json.data }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e79ed751-d416-4924-a8f0-70f1ef2e3cf8",
+      "name": "Atualiza Item",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [
+        140,
+        140
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "2",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "keepSource": true
+        }
+      },
+      "id": "d889ae23-94b4-4062-9f7d-baf3d38211b8",
+      "name": "Config",
+      "type": "n8n-nodes-base.moveBinaryData",
+      "typeVersion": 1,
+      "position": [
+        180,
+        -320
+      ],
+      "alwaysOutputData": true
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Executar Fluxo": {
+      "main": [
+        [
+          {
+            "node": "Carregar Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tratamento da Resposta": {
+      "main": [
+        [
+          {
+            "node": "Planilha de Saida",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Carregar Config": {
+      "main": [
+        [
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Carregar Input": {
+      "main": [
+        [
+          {
+            "node": "Ler Como Planilha",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Atualiza Item",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Planilha de Saida": {
+      "main": [
+        [
+          {
+            "node": "Salva Saida",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split In Batches": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Tratamento da Resposta",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Split In Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NoOp": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ler Como Planilha": {
+      "main": [
+        [
+          {
+            "node": "Remove Vazios",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tratamento Entrada": {
+      "main": [
+        [
+          {
+            "node": "Split In Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Vazios": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicados": {
+      "main": [
+        [
+          {
+            "node": "Tratamento Entrada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auth": {
+      "main": [
+        [
+          {
+            "node": "Campos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Campos": {
+      "main": [
+        [
+          {
+            "node": "Regras",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Regras": {
+      "main": [
+        [
+          {
+            "node": "Carregar Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Atualiza Item": {
+      "main": [
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "Auth",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "3f6c62a5-387b-4447-8fe4-3fc933ee4388",
+  "id": "3",
+  "meta": {
+    "instanceId": "33c55fb288fb53971b39759207f90c8f479a8a5b1eff9cfacde5bcf4a60f1101"
+  },
+  "tags": []
+}
