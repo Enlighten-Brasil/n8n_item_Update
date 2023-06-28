@@ -243,8 +243,6 @@
     {
       "parameters": {
         "url": "={{ $('Config').item.json.apiUrl }}/c-fields",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
         "sendQuery": true,
         "queryParameters": {
           "parameters": [
@@ -264,6 +262,10 @@
             {
               "name": "enl-token",
               "value": "enspace4c4c"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Auth').first().json.jwt }}"
             }
           ]
         },
@@ -276,13 +278,7 @@
       "position": [
         700,
         -320
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "2",
-          "name": "Header Auth account"
-        }
-      }
+      ]
     },
     {
       "parameters": {
@@ -568,7 +564,7 @@
     "saveManualExecutions": true,
     "callerPolicy": "workflowsFromSameOwner"
   },
-  "versionId": "9b24722f-9716-43c2-86c5-7f1a0c601cda",
+  "versionId": "874abf52-457f-499e-b0cb-15bfeeb908b6",
   "id": "3",
   "meta": {
     "instanceId": "33c55fb288fb53971b39759207f90c8f479a8a5b1eff9cfacde5bcf4a60f1101"
