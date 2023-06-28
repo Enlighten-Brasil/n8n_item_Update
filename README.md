@@ -106,7 +106,7 @@
 
 ## Exemplos 
 
-### Campos usados no exemplo
+### Configuração dos campos usados no exemplo
 - Nome (ref: `nome`): Texto
 - Registro (ref: `registro`)  : Calendário
 - Salário (ref: `salario`)  : Número
