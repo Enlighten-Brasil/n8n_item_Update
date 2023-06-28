@@ -3,14 +3,15 @@
 ## Automação n8n para atualização de itens EnSpace em lote
 
 ### Como usar
-1. Copie este repositório e cole na pasta `data` em seu n8n. (Caso não exista, crie uma pasta `data` na raiz do n8n).
-2. Na pasta Input, coloque o arquivo `.xlsx` com os dados dos formulários a serem respondidos. 
-3. Renomeie o arquivo `config.json.example` para `config.json`.
-4. Preencha o arquivo `config.json` com os dados necessários.
-5. Abra o n8n e importe o arquivo `workflow.json` para o seu n8n.
-6. Execute o workflow.
-8. Ao final, na pasta Output será gerado um arquivo `.xlsx` com a relação de formulários respondidos.
-
+1. Baixe o [n8n](https://drive.google.com/file/d/1wEh4zD1b4WhE-fZurRlPBQOLXHT8STGB/view?usp=drive_link) e extraia o arquivo `n8n.rar`.
+2. Acesse a pasta `n8n` e execute o arquivo `n8n.exe` aguarde iniciar.
+3. Copie este repositório e cole na pasta `data` em seu n8n. (Caso não exista, crie uma pasta `data` na raiz do n8n).
+4. Na pasta Input, coloque o arquivo `.xlsx` com os dados dos formulários a serem respondidos. 
+5. Renomeie o arquivo `config.json.example` para `config.json`.
+6. Preencha o arquivo `config.json` com os dados necessários.
+7. Abra o n8n e importe o arquivo `workflow.json` para o seu n8n.
+8. Execute o workflow.
+9. Ao final, na pasta Output será gerado um arquivo `.xlsx` com a relação de formulários respondidos.
 
 ### Detalhes do arquivo `config.json`
 - `apiUrl`: URL da API EnSpace. (Ex: `https://api.stage.enspace.io`).
