@@ -297,14 +297,16 @@
       "parameters": {
         "method": "PUT",
         "url": "={{ $('Config').item.json.apiUrl }}/c-items/{{ $json.reference }}",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "enl-token",
               "value": "enspace4c4c"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('Auth').first().json.jwt }}"
             }
           ]
         },
@@ -326,13 +328,7 @@
       "position": [
         140,
         140
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "2",
-          "name": "Header Auth account"
-        }
-      }
+      ]
     },
     {
       "parameters": {
@@ -564,7 +560,7 @@
     "saveManualExecutions": true,
     "callerPolicy": "workflowsFromSameOwner"
   },
-  "versionId": "874abf52-457f-499e-b0cb-15bfeeb908b6",
+  "versionId": "1eaada2f-2612-4f92-9110-1a2d510a702f",
   "id": "3",
   "meta": {
     "instanceId": "33c55fb288fb53971b39759207f90c8f479a8a5b1eff9cfacde5bcf4a60f1101"
