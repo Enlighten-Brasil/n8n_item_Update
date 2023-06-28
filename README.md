@@ -3,9 +3,9 @@
 ## Automação n8n para atualização de itens EnSpace em lote
 
 ### Como usar
-1. Baixe o [n8n](https://drive.google.com/file/d/1wEh4zD1b4WhE-fZurRlPBQOLXHT8STGB/view?usp=drive_link) e extraia o arquivo `n8n.rar`.
-2. Acesse a pasta `n8n` e execute o arquivo `n8n.exe` aguarde iniciar.
-3. Copie este repositório e cole na pasta `data` em seu n8n. (Caso não exista, crie uma pasta `data` na raiz do n8n).
+1. Baixe o [n8n](https://drive.google.com/file/d/1wEh4zD1b4WhE-fZurRlPBQOLXHT8STGB/view?usp=drive_link) e extraia o arquivo. (Pule para o passo 3 caso já tenha o n8n)
+2. Acesse a pasta e execute o arquivo `n8n.exe` aguarde iniciar.
+3. Copie este repositório e cole na pasta `data` em seu n8n. (Mantenha o nome da pasta)
 4. Na pasta Input, coloque o arquivo `.xlsx` com os dados dos formulários a serem respondidos. 
 5. Renomeie o arquivo `config.json.example` para `config.json`.
 6. Preencha o arquivo `config.json` com os dados necessários.
