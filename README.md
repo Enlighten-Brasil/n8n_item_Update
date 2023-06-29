@@ -3,7 +3,7 @@
 ## Automação n8n para atualização de itens EnSpace em lote
 
 ### Como usar
-1. Baixe o [n8n]([https://drive.google.com/file/d/1wEh4zD1b4WhE-fZurRlPBQOLXHT8STGB/view?usp=drive_link](https://drive.google.com/file/d/18eq-ZwPnkV6etOPOKQhsCPcCVIr_fwqf/view?usp=sharing) (Pule para o passo 4 caso já tenha o n8n)
+1. Baixe o [n8n](https://drive.google.com/file/d/18eq-ZwPnkV6etOPOKQhsCPcCVIr_fwqf/view?usp=sharing) (Pule para o passo 4 caso já tenha o n8n)
 2. Extraia o arquivo baixado em uma pasta de sua preferência. [Extrair aquivos Windows 11](https://conectandonet.com.br/blog/como-extrair-arquivos-rar-no-windows-11/)
 3. Acesse a pasta criada e execute o arquivo `n8n.exe`. (Aguarde a inicialização do n8n)
 4. Baixe este [repositório](https://github.com/Enlighten-Brasil/n8n_item_Update/archive/refs/heads/main.zip) e extraia o conteúdo na pasta `data` do n8n. (Ex. `n8n\data\n8n_item_Update-main`)
